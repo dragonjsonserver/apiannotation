@@ -51,9 +51,6 @@ class Module
     	$sharedManager->attach('DragonJsonServer\Service\Server', 'request', 
 	    	function (\DragonJsonServer\Event\Request $eventRequest) {
 	    		$annotations = $this->getServiceManager()->get('Config')['dragonjsonserverapiannotation']['annotations'];
-	    		if (count($annotations) == 0) {
-	    			return;
-	    		}
 	    		$serviceManager = $this->getServiceManager();
 	    		$request = $eventRequest->getRequest();
 	    		list ($classname, $methodname) = $serviceManager->get('Server')->parseMethod($request->getMethod());
@@ -76,9 +73,6 @@ class Module
     	$sharedManager->attach('DragonJsonServer\Service\Server', 'servicemap', 
     		function (\DragonJsonServer\Event\Servicemap $eventServicemap) {
 	    		$annotations = $this->getServiceManager()->get('Config')['dragonjsonserverapiannotation']['annotations'];
-	    		if (count($annotations) == 0) {
-	    			return;
-	    		} 
 	    		$serviceManager = $this->getServiceManager();
 	    		$serviceServer = $serviceManager->get('Server');
 		        foreach ($eventServicemap->getServicemap()->getServices() as $method => $service) {
