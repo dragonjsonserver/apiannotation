@@ -40,22 +40,22 @@ class Request extends \Zend\EventManager\Event
     }
 
     /**
-     * Setzt den Tag der gefunden wurde
-     * @param \Zend\Code\Reflection\DocBlock\Tag\TagInterface $tag
+     * Setzt die Annotation die gefunden wurde
+     * @param \Doctrine\Common\Annotations\Annotation $annotation
      * @return Request
      */
-    public function setTag(\Zend\Code\Reflection\DocBlock\Tag\TagInterface $tag)
+    public function setAnnotation(\Doctrine\Common\Annotations\Annotation $annotation)
     {
-        $this->setParam('tag', $tag);
+        $this->setParam('annotation', $annotation);
         return $this;
     }
 
     /**
-     * Gibt den Tag der gefunden wurde zurück
-     * @return \Zend\Code\Reflection\DocBlock\Tag\TagInterface
+     * Gibt die Annotation die gefunden wurde zurück
+     * @return \Doctrine\Common\Annotations\Annotation
      */
-    public function getTag()
+    public function getAnnotation()
     {
-        return $this->getParam('tag');
+        return $this->getParam('annotation');
     }
 }

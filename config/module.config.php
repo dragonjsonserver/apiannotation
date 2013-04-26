@@ -10,8 +10,4 @@
 /**
  * @return array
  */
-return [
-	'dragonjsonserverapiannotation' => [
-		'annotations' => [],
-	],
-];
+return [];

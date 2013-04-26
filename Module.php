@@ -50,47 +50,35 @@ class Module
     	$sharedManager = $moduleManager->getEventManager()->getSharedManager();
     	$sharedManager->attach('DragonJsonServer\Service\Server', 'request', 
 	    	function (\DragonJsonServer\Event\Request $eventRequest) {
-	    		$annotations = $this->getServiceManager()->get('Config')['dragonjsonserverapiannotation']['annotations'];
-	    		$serviceManager = $this->getServiceManager();
 	    		$request = $eventRequest->getRequest();
-	    		list ($classname, $methodname) = $serviceManager->get('Server')->parseMethod($request->getMethod());
-	    		$classreflection = new \Zend\Code\Reflection\ClassReflection($classname);
-	    		$docblock = $classreflection->getMethod($methodname)->getDocBlock();
+	    		list ($classname, $methodname) = $this->getServiceManager()->get('Server')->parseMethod($request->getMethod());
+	    		$annotations = (new \Doctrine\Common\Annotations\AnnotationReader())
+	    			->getMethodAnnotations(new \ReflectionMethod($classname, $methodname));
 	    		foreach ($annotations as $annotation) {
-	    			$tag = $docblock->getTag($annotation);
-		            if (!$tag) {
-		                continue;
-		            }
 	    			$this->getEventManager()->trigger(
     					(new \DragonJsonServerApiannotation\Event\Request())
 	    					->setTarget($this)
 	    					->setRequest($request)
-		            		->setTag($tag)
+	    					->setAnnotation($annotation)
 	    			);
 	    		}
 	    	}
     	);
     	$sharedManager->attach('DragonJsonServer\Service\Server', 'servicemap', 
     		function (\DragonJsonServer\Event\Servicemap $eventServicemap) {
-	    		$annotations = $this->getServiceManager()->get('Config')['dragonjsonserverapiannotation']['annotations'];
-	    		$serviceManager = $this->getServiceManager();
-	    		$serviceServer = $serviceManager->get('Server');
+	    		$serviceServer = $this->getServiceManager()->get('Server');
 		        foreach ($eventServicemap->getServicemap()->getServices() as $method => $service) {
 	    			list ($classname, $methodname) = $serviceServer->parseMethod($method);
-		            $classreflection = new \Zend\Code\Reflection\ClassReflection($classname);
-	    			$docblock = $classreflection->getMethod($methodname)->getDocBlock();
+			        $annotations = (new \Doctrine\Common\Annotations\AnnotationReader())
+		    			->getMethodAnnotations(new \ReflectionMethod($classname, $methodname));
 		    		foreach ($annotations as $annotation) {
-		    			$tag = $docblock->getTag($annotation);
-			            if (!$tag) {
-			                continue;
-			            }
-			            $this->getEventManager()->trigger(
-		            		(new \DragonJsonServerApiannotation\Event\Servicemap())
-			            		->setTarget($this)
+		    			$this->getEventManager()->trigger(
+	    					(new \DragonJsonServerApiannotation\Event\Servicemap())
+		    					->setTarget($this)
 			            		->setService($service)
-			            		->setTag($tag)
-			            );
-		    		}
+		    					->setAnnotation($annotation)
+		    			);
+	    			}
 		        }
     		}
     	);
