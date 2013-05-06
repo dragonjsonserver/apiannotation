@@ -48,7 +48,7 @@ class Module
     public function init(\Zend\ModuleManager\ModuleManager $moduleManager)
     {
     	$sharedManager = $moduleManager->getEventManager()->getSharedManager();
-    	$sharedManager->attach('DragonJsonServer\Service\Server', 'request', 
+    	$sharedManager->attach('DragonJsonServer\Service\Server', 'Request', 
 	    	function (\DragonJsonServer\Event\Request $eventRequest) {
 	    		$request = $eventRequest->getRequest();
 	    		list ($classname, $methodname) = $this->getServiceManager()->get('Server')->parseMethod($request->getMethod());
@@ -64,7 +64,7 @@ class Module
 	    		}
 	    	}
     	);
-    	$sharedManager->attach('DragonJsonServer\Service\Server', 'servicemap', 
+    	$sharedManager->attach('DragonJsonServer\Service\Server', 'Servicemap', 
     		function (\DragonJsonServer\Event\Servicemap $eventServicemap) {
 	    		$serviceServer = $this->getServiceManager()->get('Server');
 		        foreach ($eventServicemap->getServicemap()->getServices() as $method => $service) {

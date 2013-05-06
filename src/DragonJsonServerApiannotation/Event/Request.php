@@ -17,7 +17,7 @@ class Request extends \Zend\EventManager\Event
 	/**
 	 * @var string
 	 */
-	protected $name = 'request';
+	protected $name = 'Request';
 
     /**
      * Setzt den Request bei dem die API Annotation gefunden wurde
