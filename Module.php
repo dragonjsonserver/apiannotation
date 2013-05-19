@@ -51,7 +51,8 @@ class Module
     	$sharedManager->attach('DragonJsonServer\Service\Server', 'Request', 
 	    	function (\DragonJsonServer\Event\Request $eventRequest) {
 	    		$request = $eventRequest->getRequest();
-	    		list ($classname, $methodname) = $this->getServiceManager()->get('Server')->parseMethod($request->getMethod());
+	    		$serviceServer = $this->getServiceManager()->get('\DragonJsonServer\Service\Server');
+	    		list ($classname, $methodname) = $serviceServer->parseMethod($request->getMethod());
 	    		$annotations = (new \Doctrine\Common\Annotations\AnnotationReader())
 	    			->getMethodAnnotations(new \ReflectionMethod($classname, $methodname));
 	    		foreach ($annotations as $annotation) {
@@ -66,7 +67,7 @@ class Module
     	);
     	$sharedManager->attach('DragonJsonServer\Service\Server', 'Servicemap', 
     		function (\DragonJsonServer\Event\Servicemap $eventServicemap) {
-	    		$serviceServer = $this->getServiceManager()->get('Server');
+	    		$serviceServer = $this->getServiceManager()->get('\DragonJsonServer\Service\Server');
 		        foreach ($eventServicemap->getServicemap()->getServices() as $method => $service) {
 	    			list ($classname, $methodname) = $serviceServer->parseMethod($method);
 			        $annotations = (new \Doctrine\Common\Annotations\AnnotationReader())
